@@ -1,4 +1,5 @@
 require "mixpanel_assistant/version"
+require "active_support/core_ext"
 
 module MixpanelAssistant
   autoload :Util, "mixpanel_assistant/util"

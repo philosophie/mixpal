@@ -43,6 +43,8 @@ module MixpanelAssistant
       self.class.storage.write(STORAGE_KEY, to_store)
     end
 
+    private
+
     def restore!
       data = self.class.storage.read(STORAGE_KEY) || {}
 

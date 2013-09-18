@@ -1,6 +1,6 @@
 module MixpanelAssistant
   class User
-    attr_reader :alias_name, :properties
+    attr_reader :properties
 
     def initialize(properties)
       @properties = properties

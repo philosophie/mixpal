@@ -25,6 +25,8 @@ module MixpanelAssistant
       end
     end
 
+    private
+
     def store_mixpanel_if_redirecting
       mixpanel.store! if status == 302
     end
