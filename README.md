@@ -37,7 +37,7 @@ In this example, we'll identify our user by `current_user.email`.
 ### In your layout
 
 ```ruby
-<$= mixpanel.render() %>
+<%= mixpanel.render() %>
 ```
 
 ## Usage
