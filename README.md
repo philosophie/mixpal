@@ -105,7 +105,7 @@ end
 You can specify a custom persistence storage adapter like so:
 
 ```ruby
-MixpanelAssistant::Tracker.store = MyCustomAdapter.new
+MixpanelAssistant::Tracker.storage = MyCustomAdapter.new
 ```
 
 Storage adapters must implement the following API: `write(key, value)`,
