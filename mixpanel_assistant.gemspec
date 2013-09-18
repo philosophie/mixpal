@@ -10,7 +10,7 @@ Gem::Specification.new do |spec|
   spec.email         = ["nick@gophilosophie.com"]
   spec.description   = "Helper for integrating the preferred Mixpanel JS lib from your controllers and across redirects"
   spec.summary       = "Helper for integrating the preferred Mixpanel JS lib from your controllers and across redirects"
-  spec.homepage      = ""
+  spec.homepage      = "https://github.com/patbenatar/mixpanel_assistant"
   spec.license       = "MIT"
 
   spec.files         = `git ls-files`.split($/)
