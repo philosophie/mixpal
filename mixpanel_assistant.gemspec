@@ -8,8 +8,8 @@ Gem::Specification.new do |spec|
   spec.version       = MixpanelAssistant::VERSION
   spec.authors       = ["patbenatar"]
   spec.email         = ["nick@gophilosophie.com"]
-  spec.description   = "Helper for integrating the preferred Mixpanel JS lib from your controllers and across redirects"
-  spec.summary       = "Helper for integrating the preferred Mixpanel JS lib from your controllers and across redirects"
+  spec.description   = "Use Mixpanel's JavaScript library from your backend with ease"
+  spec.summary       = "As the JavaScript library is Mixpanel's preferred method of usage, MixpanelAssistant aims to make it easier to work with from your Rails backend. Most notably it persists tracking data across redirects, perfect for handling events like user sign ups or form submissions."
   spec.homepage      = "https://github.com/patbenatar/mixpanel_assistant"
   spec.license       = "MIT"
 
