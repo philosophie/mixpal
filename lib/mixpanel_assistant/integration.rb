@@ -5,10 +5,24 @@ module MixpanelAssistant
     included do
       helper_method :mixpanel
       after_filter :store_mixpanel_if_redirecting
+
+      class_attribute :mixpanel_identity_data
+      def self.mixpanel_identity(object_method, attribute_method)
+        self.mixpanel_identity_data = {
+          object_method: object_method,
+          attribute_method: attribute_method,
+        }
+      end
     end
 
     def mixpanel
-      @mixpanel ||= MixpanelAssistant::Tracker.new(identity: current_user.try(:email))
+      @mixpanel ||= begin
+        identity = if data = self.class.mixpanel_identity_data
+          send(data[:object_method]).try(data[:attribute_method])
+        end
+
+        MixpanelAssistant::Tracker.new(identity: identity)
+      end
     end
 
     def store_mixpanel_if_redirecting
