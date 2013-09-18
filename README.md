@@ -15,7 +15,7 @@ events like user sign ups or form submissions.
 ### Standalone
 
 ```bash
-  $ gem install mixpanel_assistant
+$ gem install mixpanel_assistant
 ```
 
 ## Setup
