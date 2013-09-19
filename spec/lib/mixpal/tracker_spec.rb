@@ -1,9 +1,9 @@
 require "spec_helper"
 
-describe MixpanelAssistant::Tracker do
-  subject { MixpanelAssistant::Tracker.new }
+describe Mixpal::Tracker do
+  subject { Mixpal::Tracker.new }
   let(:identity) { "nick" }
-  let(:subject_with_identity) { MixpanelAssistant::Tracker.new(identity: identity) }
+  let(:subject_with_identity) { Mixpal::Tracker.new(identity: identity) }
 
   describe "custom storage adapter" do
     before do
@@ -41,7 +41,7 @@ describe MixpanelAssistant::Tracker do
     end
 
     context "when data exists in storage" do
-      let(:old_tracker) { MixpanelAssistant::Tracker.new(identity: identity) }
+      let(:old_tracker) { Mixpal::Tracker.new(identity: identity) }
 
       before do
         old_tracker.track "Event 1"
@@ -58,7 +58,7 @@ describe MixpanelAssistant::Tracker do
       end
 
       it "delegates event restoration to the Event class" do
-        MixpanelAssistant::Event.should_receive(:from_store).
+        Mixpal::Event.should_receive(:from_store).
           with(old_tracker.events.first.to_store)
 
         subject
@@ -69,7 +69,7 @@ describe MixpanelAssistant::Tracker do
       end
 
       context "when initialized with an identity" do
-        subject { MixpanelAssistant::Tracker.new(identity: "Franky") }
+        subject { Mixpal::Tracker.new(identity: "Franky") }
 
         it "overrides anything from storage" do
           expect(subject.identity).to eq "Franky"
@@ -94,7 +94,7 @@ describe MixpanelAssistant::Tracker do
   describe "#update_user" do
     it "instantiates a new User object with properties" do
       properties = { name: "Nick" }
-      MixpanelAssistant::User.should_receive(:new).with(properties)
+      Mixpal::User.should_receive(:new).with(properties)
       subject.update_user(properties)
     end
 
@@ -103,7 +103,7 @@ describe MixpanelAssistant::Tracker do
         subject.update_user(name: "Nick")
       end.to change(subject.user_updates, :size).by(1)
 
-      subject.user_updates.first.should be_an_instance_of(MixpanelAssistant::User)
+      subject.user_updates.first.should be_an_instance_of(Mixpal::User)
     end
   end
 
@@ -112,7 +112,7 @@ describe MixpanelAssistant::Tracker do
       name = "Clicked Button"
       properties = { color: "Green" }
 
-      MixpanelAssistant::Event.should_receive(:new).with(name, properties)
+      Mixpal::Event.should_receive(:new).with(name, properties)
       subject.track(name, properties)
     end
 
@@ -121,7 +121,7 @@ describe MixpanelAssistant::Tracker do
         subject.track("Clicked Button", color: "Green")
       end.to change(subject.events, :size).by(1)
 
-      subject.events.first.should be_an_instance_of(MixpanelAssistant::Event)
+      subject.events.first.should be_an_instance_of(Mixpal::Event)
     end
   end
 

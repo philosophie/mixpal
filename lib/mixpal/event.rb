@@ -1,4 +1,4 @@
-module MixpanelAssistant
+module Mixpal
   class Event
     attr_reader :name, :properties
 
@@ -8,7 +8,7 @@ module MixpanelAssistant
     end
 
     def render
-      js_object = MixpanelAssistant::Util.hash_to_js_object_string(properties)
+      js_object = Mixpal::Util.hash_to_js_object_string(properties)
       "mixpanel.track(\"#{name}\", #{js_object});".html_safe
     end
 

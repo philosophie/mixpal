@@ -1,8 +1,8 @@
-module MixpanelAssistant
+module Mixpal
   class Tracker
     attr_reader :events, :user_updates, :identity, :alias_user
 
-    STORAGE_KEY = "mixpanel_assistant"
+    STORAGE_KEY = "mixpal"
     class_attribute :storage
     self.storage = Rails.cache
 
@@ -21,11 +21,11 @@ module MixpanelAssistant
     end
 
     def update_user(properties)
-      user_updates << MixpanelAssistant::User.new(properties)
+      user_updates << Mixpal::User.new(properties)
     end
 
     def track(name, properties={})
-      events << MixpanelAssistant::Event.new(name, properties)
+      events << Mixpal::Event.new(name, properties)
     end
 
     def render
@@ -50,8 +50,8 @@ module MixpanelAssistant
 
       @alias_user = data[:alias_user]
       @identity = data[:identity]
-      @events = data[:events].map { |e| MixpanelAssistant::Event.from_store(e) } if data[:events]
-      @user_updates = data[:user_updates].map { |u| MixpanelAssistant::User.from_store(u) } if data[:user_updates]
+      @events = data[:events].map { |e| Mixpal::Event.from_store(e) } if data[:events]
+      @user_updates = data[:user_updates].map { |u| Mixpal::User.from_store(u) } if data[:user_updates]
 
       self.class.storage.delete(STORAGE_KEY)
     end

@@ -1,7 +1,7 @@
-# MixpanelAssistant
+# Mixpal
 
 As the JavaScript library is Mixpanel's preferred method of usage,
-MixpanelAssistant aims to make it easier to work with from your Rails backend.
+Mixpal aims to make it easier to work with from your Rails backend.
 Most notably it persists tracking data across redirects, perfect for handling
 events like user sign ups or form submissions.
 
@@ -9,13 +9,13 @@ events like user sign ups or form submissions.
 
 ### With Bundler
 
-1. Add to Gemfile: `gem "mixpanel_assistant"`
+1. Add to Gemfile: `gem "mixpal"`
 1. `$ bundle`
 
 ### Standalone
 
 ```bash
-$ gem install mixpanel_assistant
+$ gem install mixpal
 ```
 
 ## Setup
@@ -24,12 +24,12 @@ $ gem install mixpanel_assistant
 
 ```ruby
 class ApplicationController < ActionController::Base
-  include MixpanelAssistant::Integration
+  include Mixpal::Integration
   mixpanel_identity :current_user, :email
 end
 ```
 
-`mixpanel_identity` tells MixpanelAssistant how to identify your users. This
+`mixpanel_identity` tells Mixpal how to identify your users. This
 is used to alias and identify with Mixpanel. The first arg should be a method
 on this controller that returns an object to which we can send the second arg.
 In this example, we'll identify our user by `current_user.email`.
@@ -42,8 +42,7 @@ In this example, we'll identify our user by `current_user.email`.
 
 ## Usage
 
-MixpanelAssistant exposes its helpers to your controllers, views, and view
-helpers.
+Mixpal exposes its helpers to your controllers, views, and view helpers.
 
 ### Tracking Events
 
@@ -76,7 +75,7 @@ As with `register_user`, this method will also identify "special properties".
 
 ### Persistance Across Redirects
 
-MixpanelAssistant stores any tracked events or user data in `Rails.cache` when
+Mixpal stores any tracked events or user data in `Rails.cache` when
 it detects a redirect so it can output the appropriate Mixpanel JS integration
 code to the client on the following render. This enables us to do cool things
 like:
@@ -105,7 +104,7 @@ end
 You can specify a custom persistence storage adapter like so:
 
 ```ruby
-MixpanelAssistant::Tracker.storage = MyCustomAdapter.new
+Mixpal::Tracker.storage = MyCustomAdapter.new
 ```
 
 Storage adapters must implement the following API: `write(key, value)`,

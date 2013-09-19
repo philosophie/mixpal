@@ -1,18 +1,18 @@
 require "spec_helper"
 
-describe MixpanelAssistant::Event do
+describe Mixpal::Event do
   let(:name) { "Event 1" }
   let(:properties) { { title: "Awesome Product" } }
   subject { described_class.new(name, properties) }
 
   describe "#render" do
     it "delegates to Util for js_object composition" do
-      MixpanelAssistant::Util.should_receive(:hash_to_js_object_string).with(properties)
+      Mixpal::Util.should_receive(:hash_to_js_object_string).with(properties)
       subject.render
     end
 
     it "outputs a call to track" do
-      js_object = MixpanelAssistant::Util.hash_to_js_object_string(properties)
+      js_object = Mixpal::Util.hash_to_js_object_string(properties)
       expect(subject.render).to eq "mixpanel.track(\"#{name}\", #{js_object});"
     end
 

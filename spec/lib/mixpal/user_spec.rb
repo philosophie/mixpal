@@ -1,17 +1,17 @@
 require "spec_helper"
 
-describe MixpanelAssistant::User do
+describe Mixpal::User do
   let(:properties) { { random_property: "Hansel", another_random_one: "So Hot Right Now" } }
   let(:subject) { described_class.new(properties) }
 
   describe "#render" do
     it "delegates to Util for js_object composition" do
-      MixpanelAssistant::Util.should_receive(:hash_to_js_object_string).with(properties)
+      Mixpal::Util.should_receive(:hash_to_js_object_string).with(properties)
       subject.render
     end
 
     it "outputs a call to people.set" do
-      js_object = MixpanelAssistant::Util.hash_to_js_object_string(properties)
+      js_object = Mixpal::Util.hash_to_js_object_string(properties)
       expect(subject.render).to eq "mixpanel.people.set(#{js_object});"
     end
 

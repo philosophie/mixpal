@@ -1,4 +1,4 @@
-module MixpanelAssistant
+module Mixpal
   module Util
     class << self
       def hash_to_js_object_string(hash)

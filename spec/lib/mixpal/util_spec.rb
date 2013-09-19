@@ -1,6 +1,6 @@
 require "spec_helper"
 
-describe MixpanelAssistant::Util do
+describe Mixpal::Util do
   subject { described_class }
 
   describe ".hash_to_js_object_string" do

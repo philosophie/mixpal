@@ -1,4 +1,4 @@
-module MixpanelAssistant
+module Mixpal
   module Integration
     extend ActiveSupport::Concern
 
@@ -21,7 +21,7 @@ module MixpanelAssistant
           send(data[:object_method]).try(data[:attribute_method])
         end
 
-        MixpanelAssistant::Tracker.new(identity: identity)
+        Mixpal::Tracker.new(identity: identity)
       end
     end
 

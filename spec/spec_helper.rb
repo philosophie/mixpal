@@ -1,7 +1,7 @@
 require "bundler"
 Bundler.require
 
-require "mixpanel_assistant"
+require "mixpal"
 
 Dir["./spec/support/**/*.rb"].each {|f| require f }
 

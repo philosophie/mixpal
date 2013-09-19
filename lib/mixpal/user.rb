@@ -1,4 +1,4 @@
-module MixpanelAssistant
+module Mixpal
   class User
     attr_reader :properties
 
@@ -23,7 +23,7 @@ module MixpanelAssistant
     private
 
     def properties_as_js_object_for_mixpanel
-      MixpanelAssistant::Util.hash_to_js_object_string(properties_for_mixpanel)
+      Mixpal::Util.hash_to_js_object_string(properties_for_mixpanel)
     end
 
     # Isolate special properties and rename their keys to align with
