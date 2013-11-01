@@ -7,6 +7,11 @@ events like user sign ups or form submissions.
 
 ## Installation
 
+First make sure you follow the instructions for installing Mixpanel's JS
+library:
+
+https://mixpanel.com/help/reference/javascript
+
 ### With Bundler
 
 1. Add to Gemfile: `gem "mixpal"`
