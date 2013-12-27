@@ -32,9 +32,9 @@ module Mixpal
       "".tap do |html|
         html << "<script type=\"text/javascript\">"
         html << "mixpanel.alias(\"#{identity}\");" if alias_user
+        html << "mixpanel.identify(\"#{identity}\");" if identity
         html << events.map(&:render).join("")
         html << user_updates.map(&:render).join("")
-        html << "mixpanel.identify(\"#{identity}\");" if identity
         html << "</script>"
       end.html_safe
     end
