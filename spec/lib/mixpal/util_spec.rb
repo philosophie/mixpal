@@ -18,5 +18,10 @@ describe Mixpal::Util do
       expect(subject.hash_to_js_object_string({ age: 21 })).
         to eq "{\"age\": 21}"
     end
+
+    it "does not include keys with nil values" do
+      expect(subject.hash_to_js_object_string({ age: 21, gender: nil })).
+        to eq "{\"age\": 21}"
+    end
   end
 end
