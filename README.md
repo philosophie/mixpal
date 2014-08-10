@@ -1,4 +1,4 @@
-# Mixpal [![Build Status](https://travis-ci.org/patbenatar/mixpal.svg?branch=master)](https://travis-ci.org/patbenatar/mixpal)
+# Mixpal [![Build Status](https://travis-ci.org/patbenatar/mixpal.svg?branch=master)](https://travis-ci.org/patbenatar/mixpal) [![Code Climate](https://codeclimate.com/github/patbenatar/mixpal/badges/gpa.svg)](https://codeclimate.com/github/patbenatar/mixpal)
 
 As the JavaScript library is Mixpanel's preferred method of usage,
 Mixpal aims to make it easier to work with from your Rails backend.
