@@ -21,14 +21,14 @@ module Mixpal
           send(data[:object_method]).try(data[:attribute_method])
         end
 
-        Mixpal::Tracker.new(identity: identity)
+        Mixpal::Tracker.new(identity: identity).tap { |t| t.restore!(session) }
       end
     end
 
     private
 
     def store_mixpanel_if_redirecting
-      mixpanel.store! if status == 302
+      mixpanel.store!(session) if status == 302
     end
   end
 end
