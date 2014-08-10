@@ -14,13 +14,13 @@ module Mixpal
 
     def to_store
       {
-        name: name,
-        properties: properties,
+        'name' => name,
+        'properties' => properties
       }
     end
 
     def self.from_store(data)
-      new(data[:name], data[:properties])
+      new(data['name'], data['properties'])
     end
   end
 end

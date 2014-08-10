@@ -80,7 +80,7 @@ As with `register_user`, this method will also identify "special properties".
 
 ### Persistance Across Redirects
 
-Mixpal stores any tracked events or user data in `Rails.cache` when
+Mixpal stores any tracked events or user data in the session when
 it detects a redirect so it can output the appropriate Mixpanel JS integration
 code to the client on the following render. This enables us to do cool things
 like:
@@ -104,16 +104,12 @@ class UsersController < ActionController::Base
 end
 ```
 
-#### Customizing the storage adapter
+#### A note about `CookieStore` size limit
 
-You can specify a custom persistence storage adapter like so:
-
-```ruby
-Mixpal::Tracker.storage = MyCustomAdapter.new
-```
-
-Storage adapters must implement the following API: `write(key, value)`,
-`read(key)`, and `delete(key)`.
+When using Rails' default `ActionDispatch::Session::CookieStore`, a 4K cookie
+size limit is enforced. This cookie is shared by anything using the session.
+If you anticipate tracking many events or large data sets to Mixpal,
+[consider a different session store](http://guides.rubyonrails.org/action_controller_overview.html#session).
 
 ## Contributing
 

@@ -5,24 +5,6 @@ describe Mixpal::Tracker do
   let(:identity) { "nick" }
   let(:subject_with_identity) { Mixpal::Tracker.new(identity: identity) }
 
-  describe "custom storage adapter" do
-    before do
-      @original_adapter = described_class.storage
-
-      MyCustomStorageAdapter = Class.new(MockStorage)
-      @adapter_instance = MyCustomStorageAdapter.new
-
-      described_class.storage = @adapter_instance
-    end
-
-    after { described_class.storage = @original_adapter }
-
-    it "uses the specified adapter" do
-      @adapter_instance.should_receive :write
-      subject.store!
-    end
-  end
-
   describe "#initialize" do
     it "creates an empty set of events" do
       expect(subject.events).to eq []
@@ -37,43 +19,6 @@ describe Mixpal::Tracker do
 
       it "sets the identity" do
         expect(subject.identity).to eq "nick"
-      end
-    end
-
-    context "when data exists in storage" do
-      let(:old_tracker) { Mixpal::Tracker.new(identity: identity) }
-
-      before do
-        old_tracker.track "Event 1"
-        old_tracker.register_user name: "Nick Giancola"
-        old_tracker.store!
-      end
-
-      it "restores the alias_user property" do
-        expect(subject.alias_user).to eq true
-      end
-
-      it "restores the events" do
-        expect(subject.events.size).to eq 1
-      end
-
-      it "delegates event restoration to the Event class" do
-        Mixpal::Event.should_receive(:from_store).
-          with(old_tracker.events.first.to_store)
-
-        subject
-      end
-
-      it "restores the events" do
-        expect(subject.events.size).to eq 1
-      end
-
-      context "when initialized with an identity" do
-        subject { Mixpal::Tracker.new(identity: "Franky") }
-
-        it "overrides anything from storage" do
-          expect(subject.identity).to eq "Franky"
-        end
       end
     end
   end
@@ -198,38 +143,21 @@ describe Mixpal::Tracker do
   end
 
   describe "#store!" do
-    let(:storage) { described_class::storage }
-
-    after { MockRails.cache.delete(described_class::STORAGE_KEY) }
+    let(:session) { {} }
 
     def storage_should_include(hash_fragment)
-      storage.should_receive(:write).with(
-        described_class::STORAGE_KEY,
-        hash_including(hash_fragment)
-      )
+      expect(session[described_class::STORAGE_KEY]).to include hash_fragment
     end
 
-    it "writes to the storage adapter" do
-      storage.should_receive(:write)
-      subject.store!
+    it "stores the alias_user property" do
+      subject.register_user({})
+      subject.store!(session)
+      storage_should_include('alias_user' => true)
     end
 
-    context "when alias_user is set" do
-      before { subject.register_user({}) }
-
-      it "stores the alias_user property" do
-        storage_should_include(alias_user: true)
-        subject.store!
-      end
-    end
-
-    context "when identity is set" do
-      subject { subject_with_identity }
-
-      it "stores the identity" do
-        storage_should_include(identity: identity)
-        subject.store!
-      end
+    it "stores the identity" do
+      subject_with_identity.store!(session)
+      storage_should_include('identity' => identity)
     end
 
     context "when events have been tracked" do
@@ -240,15 +168,14 @@ describe Mixpal::Tracker do
 
       it "delegates composition to the events" do
         subject.events.each { |event| event.should_receive :to_store }
-        subject.store!
+        subject.store!(session)
       end
 
       it "stores the events' composed hashes in an array" do
+        subject.store!(session)
         storage_should_include(
-          events: [subject.events[0].to_store, subject.events[1].to_store]
+          'events' => [subject.events[0].to_store, subject.events[1].to_store]
         )
-
-        subject.store!
       end
     end
 
@@ -260,18 +187,75 @@ describe Mixpal::Tracker do
 
       it "delegates composition to the users" do
         subject.user_updates.each { |user| user.should_receive :to_store }
-        subject.store!
+        subject.store!(session)
       end
 
       it "stores the users' composed hashes in an array" do
+        subject.store!(session)
+
         storage_should_include(
-          user_updates: [
+          'user_updates' => [
             subject.user_updates[0].to_store,
             subject.user_updates[1].to_store
           ]
         )
+      end
+    end
+  end
 
-        subject.store!
+  describe '#restore!' do
+    let(:old_tracker) { Mixpal::Tracker.new(identity: identity) }
+    let(:session) { {} }
+
+    before do
+      old_tracker.track "Event 1"
+      old_tracker.register_user name: "Nick Giancola"
+      old_tracker.store!(session)
+    end
+
+    it "restores the alias_user property" do
+      subject.restore!(session)
+      expect(subject.alias_user).to eq true
+    end
+
+    it "restores the events" do
+      subject.restore!(session)
+      expect(subject.events.size).to eq 1
+    end
+
+    it "delegates event restoration to the Event class" do
+      Mixpal::Event.should_receive(:from_store).
+        with(old_tracker.events.first.to_store)
+
+      subject.restore!(session)
+    end
+
+    it "restores the events" do
+      subject.restore!(session)
+      expect(subject.events.size).to eq 1
+    end
+
+    it "is indifferent about strings as keys" do
+      session[Mixpal::Tracker::STORAGE_KEY]['alias_user'] = false
+      subject.restore!(session)
+      expect(subject.alias_user).to eq false
+    end
+
+    context "with a different identity (e.g. after login)" do
+      subject { Mixpal::Tracker.new(identity: "#{identity}-2") }
+
+      it "does not override identity with value in storage" do
+        subject.restore!(session)
+        expect(subject.identity).to eq "#{identity}-2"
+      end
+    end
+
+    context "with no identity (e.g. after logout)" do
+      subject { Mixpal::Tracker.new(identity: nil) }
+
+      it "overrides identity with value in storage" do
+        subject.restore!(session)
+        expect(subject.identity).to eq identity
       end
     end
   end

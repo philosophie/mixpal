@@ -12,12 +12,12 @@ module Mixpal
 
     def to_store
       {
-        properties: properties,
+        'properties' => properties,
       }
     end
 
     def self.from_store(data)
-      new(data[:properties])
+      new(data['properties'])
     end
 
     private
