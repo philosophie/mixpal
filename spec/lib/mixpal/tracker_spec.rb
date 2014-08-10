@@ -152,12 +152,12 @@ describe Mixpal::Tracker do
     it "stores the alias_user property" do
       subject.register_user({})
       subject.store!(session)
-      storage_should_include(alias_user: true)
+      storage_should_include('alias_user' => true)
     end
 
     it "stores the identity" do
       subject_with_identity.store!(session)
-      storage_should_include(identity: identity)
+      storage_should_include('identity' => identity)
     end
 
     context "when events have been tracked" do
@@ -174,7 +174,7 @@ describe Mixpal::Tracker do
       it "stores the events' composed hashes in an array" do
         subject.store!(session)
         storage_should_include(
-          events: [subject.events[0].to_store, subject.events[1].to_store]
+          'events' => [subject.events[0].to_store, subject.events[1].to_store]
         )
       end
     end
@@ -194,7 +194,7 @@ describe Mixpal::Tracker do
         subject.store!(session)
 
         storage_should_include(
-          user_updates: [
+          'user_updates' => [
             subject.user_updates[0].to_store,
             subject.user_updates[1].to_store
           ]
@@ -233,6 +233,12 @@ describe Mixpal::Tracker do
     it "restores the events" do
       subject.restore!(session)
       expect(subject.events.size).to eq 1
+    end
+
+    it "is indifferent about strings as keys" do
+      session[Mixpal::Tracker::STORAGE_KEY]['alias_user'] = false
+      subject.restore!(session)
+      expect(subject.alias_user).to eq false
     end
 
     context "with a different identity (e.g. after login)" do

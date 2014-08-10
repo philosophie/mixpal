@@ -54,13 +54,13 @@ describe Mixpal::User do
   describe "#to_store" do
     it "returns a hash with its data" do
       expect(subject.to_store).to eq(
-        properties: properties,
+        'properties' => properties,
       )
     end
   end
 
   describe "#from_store" do
-    let(:result) { described_class.from_store(properties: properties) }
+    let(:result) { described_class.from_store('properties' => properties) }
 
     it "instantiates a new instance" do
       expect(result).to be_an_instance_of(described_class)

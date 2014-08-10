@@ -42,10 +42,10 @@ module Mixpal
     def restore!(session)
       data = session[STORAGE_KEY] || {}
 
-      @alias_user = data[:alias_user]
-      @identity ||= data[:identity]
-      @events = data[:events].map { |e| Mixpal::Event.from_store(e) } if data[:events]
-      @user_updates = data[:user_updates].map { |u| Mixpal::User.from_store(u) } if data[:user_updates]
+      @alias_user = data['alias_user']
+      @identity ||= data['identity']
+      @events = data['events'].map { |e| Mixpal::Event.from_store(e) } if data['events']
+      @user_updates = data['user_updates'].map { |u| Mixpal::User.from_store(u) } if data['user_updates']
 
       session.delete(STORAGE_KEY)
     end
@@ -54,10 +54,10 @@ module Mixpal
 
     def to_store
       {
-        alias_user: alias_user,
-        identity: identity,
-        events: events.map(&:to_store),
-        user_updates: user_updates.map(&:to_store),
+        'alias_user' => alias_user,
+        'identity' => identity,
+        'events' => events.map(&:to_store),
+        'user_updates' => user_updates.map(&:to_store)
       }
     end
   end
