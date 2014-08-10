@@ -235,12 +235,6 @@ describe Mixpal::Tracker do
       expect(subject.events.size).to eq 1
     end
 
-    it "is indifferent about strings as keys" do
-      session[Mixpal::Tracker::STORAGE_KEY]['alias_user'] = false
-      subject.restore!(session)
-      expect(subject.alias_user).to eq false
-    end
-
     context "with a different identity (e.g. after login)" do
       subject { Mixpal::Tracker.new(identity: "#{identity}-2") }
 
