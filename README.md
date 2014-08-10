@@ -104,6 +104,13 @@ class UsersController < ActionController::Base
 end
 ```
 
+#### A note about `CookieStore` size limit
+
+When using Rails' default `ActionDispatch::Session::CookieStore`, a 4K cookie
+size limit is enforced. This cookie is shared by anything using the session.
+If you anticipate tracking many events or large data sets to Mixpal,
+[consider a different session store](http://guides.rubyonrails.org/action_controller_overview.html#session).
+
 ## Contributing
 
 1. Fork it
