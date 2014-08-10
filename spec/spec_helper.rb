@@ -1,9 +1,9 @@
-require "bundler"
+require 'bundler'
 Bundler.require
 
-require "mixpal"
+require 'mixpal'
 
-Dir["./spec/support/**/*.rb"].each {|f| require f }
+Dir['./spec/support/**/*.rb'].each { |f| require f }
 
 RSpec.configure do |config|
   config.treat_symbols_as_metadata_keys_with_true_values = true

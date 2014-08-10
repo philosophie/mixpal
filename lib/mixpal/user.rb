@@ -12,7 +12,7 @@ module Mixpal
 
     def to_store
       {
-        'properties' => properties,
+        'properties' => properties
       }
     end
 
@@ -29,14 +29,16 @@ module Mixpal
     # Isolate special properties and rename their keys to align with
     # Mixpanel's naming.
     def properties_for_mixpanel
-      Hash[properties.map {|k, v| [mixpanel_special_properties_map[k] || k, v] }]
+      Hash[
+        properties.map { |k, v| [mixpanel_special_properties_map[k] || k, v] }
+      ]
     end
 
     def mixpanel_special_properties_map
       {
-        name: "$name",
-        email: "$email",
-        created_at: "$created",
+        name: '$name',
+        email: '$email',
+        created_at: '$created'
       }.with_indifferent_access
     end
   end

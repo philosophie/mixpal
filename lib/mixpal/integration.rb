@@ -10,16 +10,16 @@ module Mixpal
       def self.mixpanel_identity(object_method, attribute_method)
         self.mixpanel_identity_data = {
           object_method: object_method,
-          attribute_method: attribute_method,
+          attribute_method: attribute_method
         }
       end
     end
 
     def mixpanel
       @mixpanel ||= begin
-        identity = if data = self.class.mixpanel_identity_data
-          send(data[:object_method]).try(data[:attribute_method])
-        end
+        identity = if (data = self.class.mixpanel_identity_data)
+                     send(data[:object_method]).try(data[:attribute_method])
+                   end
 
         Mixpal::Tracker.new(identity: identity).tap { |t| t.restore!(session) }
       end

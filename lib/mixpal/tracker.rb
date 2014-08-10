@@ -2,9 +2,9 @@ module Mixpal
   class Tracker
     attr_reader :events, :user_updates, :identity, :alias_user
 
-    STORAGE_KEY = "mixpal"
+    STORAGE_KEY = 'mixpal'
 
-    def initialize(args={})
+    def initialize(args = {})
       @events = []
       @user_updates = []
 
@@ -20,18 +20,18 @@ module Mixpal
       user_updates << Mixpal::User.new(properties)
     end
 
-    def track(name, properties={})
+    def track(name, properties = {})
       events << Mixpal::Event.new(name, properties)
     end
 
     def render
-      "".tap do |html|
-        html << "<script type=\"text/javascript\">"
+      ''.tap do |html|
+        html << '<script type="text/javascript">'
         html << "mixpanel.alias(\"#{identity}\");" if alias_user
         html << "mixpanel.identify(\"#{identity}\");" if identity
-        html << events.map(&:render).join("")
-        html << user_updates.map(&:render).join("")
-        html << "</script>"
+        html << events.map(&:render).join('')
+        html << user_updates.map(&:render).join('')
+        html << '</script>'
       end.html_safe
     end
 
@@ -44,8 +44,15 @@ module Mixpal
 
       @alias_user = data['alias_user']
       @identity ||= data['identity']
-      @events = data['events'].map { |e| Mixpal::Event.from_store(e) } if data['events']
-      @user_updates = data['user_updates'].map { |u| Mixpal::User.from_store(u) } if data['user_updates']
+
+      if data['events']
+        @events = data['events'].map { |e| Mixpal::Event.from_store(e) }
+      end
+
+      if data['user_updates']
+        @user_updates = data['user_updates']
+          .map { |u| Mixpal::User.from_store(u) }
+      end
 
       session.delete(STORAGE_KEY)
     end

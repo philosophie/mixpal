@@ -1,4 +1,4 @@
-require "nokogiri"
+require 'nokogiri'
 
 RSpec::Matchers.define :have_tag do |tag|
   match do |string|
