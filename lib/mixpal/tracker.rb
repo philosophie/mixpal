@@ -5,6 +5,8 @@ module Mixpal
     STORAGE_KEY = 'mixpal'
 
     def initialize(args = {})
+      extend Mixpal.configuration.helper_module
+
       @events = []
       @user_updates = []
 

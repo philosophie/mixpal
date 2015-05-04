@@ -5,6 +5,18 @@ describe Mixpal::Tracker do
   let(:identity) { 'nick' }
   let(:subject_with_identity) { Mixpal::Tracker.new(identity: identity) }
 
+  context 'with configured helper module' do
+    before do
+      Mixpal.configure do |config|
+        config.helper_module = CustomEventsModule
+      end
+    end
+
+    it 'exposes helper module methods on tracker instance' do
+      expect(subject.custom_event).to eq true
+    end
+  end
+
   describe '#initialize' do
     it 'creates an empty set of events' do
       expect(subject.events).to eq []
