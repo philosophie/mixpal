@@ -5,6 +5,8 @@ module Mixpal
     STORAGE_KEY = 'mixpal'
 
     def initialize(args = {})
+      extend Mixpal.configuration.helper_module
+
       @events = []
       @user_updates = []
 
@@ -50,8 +52,8 @@ module Mixpal
       end
 
       if data['user_updates']
-        @user_updates = data['user_updates']
-          .map { |u| Mixpal::User.from_store(u) }
+        @user_updates =
+          data['user_updates'].map { |u| Mixpal::User.from_store(u) }
       end
 
       session.delete(STORAGE_KEY)
