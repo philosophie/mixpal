@@ -2,6 +2,10 @@ module Mixpal
   class Tracker
     attr_reader :events, :user_updates, :identity, :alias_user
 
+    if Mixpal.configuration && Mixpal.configuration.helper_module
+      include Mixpal.configuration.helper_module
+    end
+
     STORAGE_KEY = 'mixpal'
 
     def initialize(args = {})
