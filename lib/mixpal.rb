@@ -9,19 +9,21 @@ module Mixpal
   autoload :User, 'mixpal/user'
   autoload :Integration, 'mixpal/integration'
 
-  def self.configuration
-    @@configuration ||= Configuration.new
-  end
+  class << self
+    def configuration
+      @configuration ||= Configuration.new
+    end
 
-  def self.configure
-    yield(self.configuration)
+    def configure
+      yield(configuration)
+    end
   end
 
   class Configuration
     attr_writer :helper_module
 
     def helper_module
-      @helper_module ||= Module.new 
+      @helper_module ||= Module.new
     end
   end
 end
