@@ -78,6 +78,38 @@ mixpanel.update_user email: "mynewemail@example.com"
 
 As with `register_user`, this method will also identify "special properties".
 
+### Custom Events
+
+Mixpal allows you to define custom mixpal methods to use in your controllers/views
+
+1. create a custom module and define your mixpal events
+```ruby
+module YourCustomEventsModule
+  def sign_up(user)
+    register_user user.attributes.slice('name', 'email')
+    track 'User signed up'
+  end
+end
+```
+
+2. create a mixpal.rb initializer and configure mixpal to use your module
+```ruby
+Mixpal.configure do |config|
+  config.helper_module = YourCustomEventsModule
+end
+```
+
+3. use in controllers/views
+```ruby
+class UserController < ActionController::Base
+  def create
+    # ... do cool stuff ...
+    mixpal.sign_up(user)
+    redirect_to root_path
+  end
+end
+```
+
 ### Persistance Across Redirects
 
 Mixpal stores any tracked events or user data in the session when
