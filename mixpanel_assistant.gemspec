@@ -6,7 +6,7 @@ require 'mixpal/version'
 Gem::Specification.new do |spec|
   spec.name          = "mixpal"
   spec.version       = Mixpal::VERSION
-  spec.authors       = ["patbenatar"]
+  spec.authors       = ["patbenatar", "mikehmorrissey"]
   spec.email         = ["nick@gophilosophie.com"]
   spec.description   = "Use Mixpanel's JavaScript library from your backend with ease"
   spec.summary       = "As the JavaScript library is Mixpanel's preferred method of usage, Mixpal aims to make it easier to work with from your Rails backend. Most notably it persists tracking data across redirects, perfect for handling events like user sign ups or form submissions."
