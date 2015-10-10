@@ -26,6 +26,10 @@ describe Mixpal::Tracker do
       expect(subject.user_updates).to eq []
     end
 
+    it 'creates an empty set of revenue_updates' do
+      expect(subject.revenue_updates).to eq []
+    end
+
     context 'with an :identity arg' do
       subject { subject_with_identity }
 
@@ -79,6 +83,22 @@ describe Mixpal::Tracker do
       end.to change(subject.events, :size).by(1)
 
       subject.events.first.should be_an_instance_of(Mixpal::Event)
+    end
+  end
+
+  describe '#track_charge' do
+    it 'instantiates a new Revenue object with properties' do
+      properties = { sku: 'SKU-1010' }
+      Mixpal::Revenue.should_receive(:new).with(50, properties)
+      subject.track_charge(50, properties)
+    end
+
+    it 'adds the Revenue to revenue_updates for rendering later' do
+      expect do
+        subject.track_charge(50, sku: 'SKU-1010')
+      end.to change(subject.revenue_updates, :size).by(1)
+
+      subject.revenue_updates.first.should be_an_instance_of(Mixpal::Revenue)
     end
   end
 
@@ -149,6 +169,24 @@ describe Mixpal::Tracker do
 
       it 'joins each rendered user' do
         joined = subject.user_updates[0].render + subject.user_updates[1].render
+        expect(subject.render).to include joined
+      end
+    end
+
+    context 'with revenue' do
+      before do
+        subject.track_charge(50)
+        subject.track_charge(100, sku: 'SKU-1010')
+      end
+
+      it 'delegates render to the revenues' do
+        subject.revenue_updates.each { |r| r.should_receive :render }
+        subject.render
+      end
+
+      it 'joins each rendered revenue' do
+        joined =
+          subject.revenue_updates[0].render + subject.revenue_updates[1].render
         expect(subject.render).to include joined
       end
     end

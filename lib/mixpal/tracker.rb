@@ -1,6 +1,6 @@
 module Mixpal
   class Tracker
-    attr_reader :events, :user_updates, :identity, :alias_user
+    attr_reader :events, :user_updates, :revenue_updates, :identity, :alias_user
 
     STORAGE_KEY = 'mixpal'
 
@@ -9,6 +9,7 @@ module Mixpal
 
       @events = []
       @user_updates = []
+      @revenue_updates = []
 
       @identity = args[:identity]
     end
@@ -26,6 +27,10 @@ module Mixpal
       events << Mixpal::Event.new(name, properties)
     end
 
+    def track_charge(amount, properties = {})
+      revenue_updates << Mixpal::Revenue.new(amount, properties)
+    end
+
     def render
       ''.tap do |html|
         html << '<script type="text/javascript">'
@@ -33,6 +38,7 @@ module Mixpal
         html << "mixpanel.identify(\"#{identity}\");" if identity
         html << events.map(&:render).join('')
         html << user_updates.map(&:render).join('')
+        html << revenue_updates.map(&:render).join('')
         html << '</script>'
       end.html_safe
     end
@@ -56,6 +62,11 @@ module Mixpal
           data['user_updates'].map { |u| Mixpal::User.from_store(u) }
       end
 
+      if data['revenue_updates']
+        @revenue_updates =
+          data['revenue_updates'].map { |u| Mixpal::Revenue.from_store(u) }
+      end
+
       session.delete(STORAGE_KEY)
     end
 
@@ -66,7 +77,8 @@ module Mixpal
         'alias_user' => alias_user,
         'identity' => identity,
         'events' => events.map(&:to_store),
-        'user_updates' => user_updates.map(&:to_store)
+        'user_updates' => user_updates.map(&:to_store),
+        'revenue_updates' => revenue_updates.map(&:to_store)
       }
     end
   end

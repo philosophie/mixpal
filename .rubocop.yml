@@ -16,9 +16,6 @@ MethodLength:
 DoubleNegation:
   Enabled: false
 
-AbcSize:
-  Max: 20
-
 AllCops:
   Include:
     - "Rakefile"

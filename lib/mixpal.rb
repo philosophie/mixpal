@@ -7,6 +7,7 @@ module Mixpal
   autoload :Tracker, 'mixpal/tracker'
   autoload :Event, 'mixpal/event'
   autoload :User, 'mixpal/user'
+  autoload :Revenue, 'mixpal/revenue'
   autoload :Integration, 'mixpal/integration'
 
   class << self
