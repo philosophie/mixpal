@@ -17,6 +17,7 @@ DoubleNegation:
   Enabled: false
 
 AllCops:
+  NewCops: enable
   Include:
     - "Rakefile"
   Exclude:
