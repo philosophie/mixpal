@@ -152,3 +152,15 @@ If you anticipate tracking many events or large data sets to Mixpal,
 1. Commit your changes (`git commit -am 'Add some feature'`)
 1. Push to the branch (`git push origin feature/my-new-feature`)
 1. Create new Pull Request
+
+## Releasing
+
+Bump `lib/mixpal/version.rb` then build + release with docker-compose. If you
+prefer local development, inspect the Dockerfile to get your local env built.
+
+```
+docker-compose build \
+  --build-arg USER_ID=$(id -u) \
+  --build-arg GROUP_ID=$(id -g)
+docker-compose run rake release
+```
