@@ -7,7 +7,7 @@ describe Mixpal::Event do
 
   describe '#render' do
     it 'delegates to Util for js_object composition' do
-      Mixpal::Util.should_receive(:hash_to_js_object_string).with(properties)
+      expect(Mixpal::Util).to receive(:hash_to_js_object_string).with(properties)
       subject.render
     end
 

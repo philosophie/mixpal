@@ -4,7 +4,11 @@ module Mixpal
 
     included do
       helper_method :mixpanel
-      after_filter :store_mixpanel_if_redirecting
+      if Rails::VERSION::MAJOR >= 4
+        after_action :store_mixpanel_if_redirecting
+      else
+        after_filter :store_mixpanel_if_redirecting
+      end
 
       class_attribute :mixpanel_identity_data
       def self.mixpanel_identity(object_method, attribute_method)

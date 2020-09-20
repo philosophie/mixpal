@@ -42,12 +42,12 @@ describe Mixpal::Tracker do
   describe '#register_user' do
     it 'sets the alias_user flag so we render the alias call' do
       subject.register_user(name: 'Nick')
-      expect(subject.alias_user).to be_true
+      expect(subject.alias_user).to be true
     end
 
     it 'delegates to #update_user for tracking user properties' do
       properties = { name: 'Nick' }
-      subject.should_receive(:update_user).with(properties)
+      expect(subject).to receive(:update_user).with(properties)
       subject.register_user(properties)
     end
   end
@@ -55,7 +55,7 @@ describe Mixpal::Tracker do
   describe '#update_user' do
     it 'instantiates a new User object with properties' do
       properties = { name: 'Nick' }
-      Mixpal::User.should_receive(:new).with(properties)
+      expect(Mixpal::User).to receive(:new).with(properties)
       subject.update_user(properties)
     end
 
@@ -64,7 +64,7 @@ describe Mixpal::Tracker do
         subject.update_user(name: 'Nick')
       end.to change(subject.user_updates, :size).by(1)
 
-      subject.user_updates.first.should be_an_instance_of(Mixpal::User)
+      expect(subject.user_updates.first).to be_an_instance_of(Mixpal::User)
     end
   end
 
@@ -73,7 +73,7 @@ describe Mixpal::Tracker do
       name = 'Clicked Button'
       properties = { color: 'Green' }
 
-      Mixpal::Event.should_receive(:new).with(name, properties)
+      expect(Mixpal::Event).to receive(:new).with(name, properties)
       subject.track(name, properties)
     end
 
@@ -82,14 +82,14 @@ describe Mixpal::Tracker do
         subject.track('Clicked Button', color: 'Green')
       end.to change(subject.events, :size).by(1)
 
-      subject.events.first.should be_an_instance_of(Mixpal::Event)
+      expect(subject.events.first).to be_an_instance_of(Mixpal::Event)
     end
   end
 
   describe '#track_charge' do
     it 'instantiates a new Revenue object with properties' do
       properties = { sku: 'SKU-1010' }
-      Mixpal::Revenue.should_receive(:new).with(50, properties)
+      expect(Mixpal::Revenue).to receive(:new).with(50, properties)
       subject.track_charge(50, properties)
     end
 
@@ -98,7 +98,7 @@ describe Mixpal::Tracker do
         subject.track_charge(50, sku: 'SKU-1010')
       end.to change(subject.revenue_updates, :size).by(1)
 
-      subject.revenue_updates.first.should be_an_instance_of(Mixpal::Revenue)
+      expect(subject.revenue_updates.first).to be_an_instance_of(Mixpal::Revenue)
     end
   end
 
@@ -146,7 +146,7 @@ describe Mixpal::Tracker do
       end
 
       it 'delegates render to the events' do
-        subject.events.each { |event| event.should_receive :render }
+        subject.events.each { |event| expect(event).to receive :render }
         subject.render
       end
 
@@ -163,7 +163,7 @@ describe Mixpal::Tracker do
       end
 
       it 'delegates render to the users' do
-        subject.user_updates.each { |user| user.should_receive :render }
+        subject.user_updates.each { |user| expect(user).to receive :render }
         subject.render
       end
 
@@ -180,7 +180,7 @@ describe Mixpal::Tracker do
       end
 
       it 'delegates render to the revenues' do
-        subject.revenue_updates.each { |r| r.should_receive :render }
+        subject.revenue_updates.each { |r| expect(r).to receive :render }
         subject.render
       end
 
@@ -195,19 +195,19 @@ describe Mixpal::Tracker do
   describe '#store!' do
     let(:session) { {} }
 
-    def storage_should_include(hash_fragment)
+    def expect_storage_to_include(hash_fragment)
       expect(session[described_class::STORAGE_KEY]).to include hash_fragment
     end
 
     it 'stores the alias_user property' do
       subject.register_user({})
       subject.store!(session)
-      storage_should_include('alias_user' => true)
+      expect_storage_to_include('alias_user' => true)
     end
 
     it 'stores the identity' do
       subject_with_identity.store!(session)
-      storage_should_include('identity' => identity)
+      expect_storage_to_include('identity' => identity)
     end
 
     context 'when events have been tracked' do
@@ -217,13 +217,13 @@ describe Mixpal::Tracker do
       end
 
       it 'delegates composition to the events' do
-        subject.events.each { |event| event.should_receive :to_store }
+        subject.events.each { |event| expect(event).to receive :to_store }
         subject.store!(session)
       end
 
       it 'stores the events composed hashes in an array' do
         subject.store!(session)
-        storage_should_include(
+        expect_storage_to_include(
           'events' => [subject.events[0].to_store, subject.events[1].to_store]
         )
       end
@@ -236,14 +236,14 @@ describe Mixpal::Tracker do
       end
 
       it 'delegates composition to the users' do
-        subject.user_updates.each { |user| user.should_receive :to_store }
+        subject.user_updates.each { |user| expect(user).to receive :to_store }
         subject.store!(session)
       end
 
       it 'stores the users composed hashes in an array' do
         subject.store!(session)
 
-        storage_should_include(
+        expect_storage_to_include(
           'user_updates' => [
             subject.user_updates[0].to_store,
             subject.user_updates[1].to_store
@@ -274,7 +274,7 @@ describe Mixpal::Tracker do
     end
 
     it 'delegates event restoration to the Event class' do
-      Mixpal::Event.should_receive(:from_store)
+      expect(Mixpal::Event).to receive(:from_store)
         .with(old_tracker.events.first.to_store)
 
       subject.restore!(session)
