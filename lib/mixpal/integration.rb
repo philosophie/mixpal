@@ -32,7 +32,7 @@ module Mixpal
     private
 
     def store_mixpanel_if_redirecting
-      mixpanel.store!(session) if status == 302
+      mixpanel.store!(session) if (300..399).cover?(status)
     end
   end
 end
