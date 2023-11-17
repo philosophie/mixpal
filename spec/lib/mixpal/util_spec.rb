@@ -24,5 +24,10 @@ describe Mixpal::Util do
       expect(subject.hash_to_js_object_string(age: 21, gender: nil))
         .to eq '{"age": 21}'
     end
+
+    it 'escapes double quotes in values' do
+      expect(subject.hash_to_js_object_string(key: 'value "with" quotes'))
+        .to eq '{"key": "value \"with\" quotes"}'
+    end
   end
 end

@@ -5,11 +5,21 @@ module Mixpal
         hash.reject! { |_, v| v.nil? }
 
         contents = hash.map do |k, v|
-          js_value = v.is_a?(String) || v.is_a?(Time) ? "\"#{v}\"" : v
-          "\"#{k}\": #{js_value}"
+          "\"#{k}\": #{escape_js_object_value(v)}"
         end.join(',').html_safe
 
         "{#{contents}}"
+      end
+
+      def escape_js_object_value(value)
+        case value
+        when String
+          value.dump
+        when Time
+          "\"#{value}\""
+        else
+          value
+        end
       end
     end
   end
